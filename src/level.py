@@ -40,17 +40,21 @@ class Level:
         player_x = player.rect.centerx      # player's x coordinate
         direction_x = player.direction.x    # player's direction movement
 
+        # scrolling to the left
         if player_x < 200 and direction_x < 0:
             self.world_shift = 4
             player.velocity = 0
+            return
 
-        elif player_x > 1000 and direction_x > 0:
+        # scrolling to the right
+        if player_x > 1000 and direction_x > 0:
             self.world_shift = -4
             player.velocity = 0
+            return
 
-        else:
-            self.world_shift = 0
-            player.velocity = 4
+        # default, no scrolling at all
+        self.world_shift = 0
+        player.velocity = 4
 
 
     def run(self):

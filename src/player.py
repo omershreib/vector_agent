@@ -18,17 +18,17 @@ class Player(pygame.sprite.Sprite):
 
     def get_input(self):
         keys = pygame.key.get_pressed()
-        is_player_moves = bool(bool(keys[pygame.K_RIGHT] or bool(keys[pygame.K_LEFT])))
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT]:    # player's direction to the right
             self.direction.x = 1
+            return
 
-        elif keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT]:     # player's direction to the left
             self.direction.x = -1
+            return
 
-        else:
-            self.direction.x = 0
-        #print(self.direction.x)
+        self.direction.x = 0    # player is not moving
+
 
 
     def update(self):
