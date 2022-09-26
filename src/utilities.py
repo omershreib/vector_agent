@@ -1,5 +1,6 @@
 from os import walk
 import pygame
+import json
 import ctypes
 
 def import_folder(path):
@@ -18,7 +19,11 @@ def get_windows_screen_size():
 	screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 	return screensize
 
+def load_json(jsonfile):
+	with open(jsonfile) as jfile:
+		data = json.load(jfile)
 
+	return data
 
 
 

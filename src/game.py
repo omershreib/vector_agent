@@ -1,6 +1,13 @@
-class GameManager:
+from level import LevelManager
+
+class GameManager(LevelManager):
     def __init__(self, surface):
-        self.main_surface = surface
+        super().__init__(surface)
+
+    def run(self):
+        self.run_level()
 
     def start(self):
-        pass
+        self.level_setup(0)
+        self.run()
+
