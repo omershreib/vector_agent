@@ -56,17 +56,53 @@ class Level:
         self.world_shift = 0
         player.velocity = 4
 
+    def hor_movemenet_collision(self):
+        player = self.player.sprite
+        player.rect.x += player.direction.x * player.velocity
+
+        for tile in self.tiles.sprites():
+
+            # checks if the player is collide with                                  # did we have a collision?
+            # one of the tile's rectangle
+            if tile.rect.colliderect(player.rect):                                  # if so, where (left or right)?
+                if player.direction.x < 0:      # player is moving to the left
+                    player.rect.left = tile.rect.right
+
+                elif player.direction.x > 0:      # player is moving to the right
+                    player.rect.right = tile.rect.left
+
+    def ver_movement_collision(self):
+        player = self.player.sprite
+        player.apply_gravity()
+        player.rect.y += player.direction.y * player.gravity
+
+        for tile in self.tiles.sprites():
+            # checks if the player is collide with                                  # did we have a collision?
+            # one of the tile's rectangle
+            if tile.rect.colliderect(player.rect):                                  # if so, where (top or bottom)?
+                if player.direction.y > 0:  # player is moving to the bottom
+                    player.rect.bottom = tile.rect.top
+                    player.direction.y = 0  # this line cancel gravity where the player is standing on top of a tile
+                    return
+
+                if player.direction.y < 0:  # player is moving to the top
+                    player.rect.top = tile.rect.bottom
+                    player.direction.y = 0
+                    return
 
     def run(self):
         screen = self.display_surface
 
-        # update and draw tiles
+        # level tiles
         self.tiles.update(self.world_shift)
         self.tiles.draw(screen)
+        self.scroll_x()
 
-        # update and draw player
+        # player
         self.player.update()
+        self.hor_movemenet_collision()
+        self.ver_movement_collision()
         self.player.draw(screen)
 
-        # update world-shift scrolling
-        self.scroll_x()
+
+
