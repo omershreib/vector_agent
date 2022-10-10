@@ -16,17 +16,20 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.8
         self.jump_velocity = -16
 
+        # player status
+        self.status = 'idle'
+
         # player animations variables
-        self.sprite_name = 'character'
+        self.sprite_name = 'vector'
         self.animations = {'idle': [],
                            'run': [],
                            'jump': [],
                            'fall': []}
         self.import_character_assets()
-        [self.apply_transformation_scale(key) for key in self.animations.keys()] # resize images if needed
+        #[self.apply_transformation_scale(key) for key in self.animations.keys()] # resize images if needed
         self.frame_index = 0
         self.current_index = 0
-        self.animation_speed = 0.15
+        self.animation_speed = 0.05
         self.image = self.animations['idle'][self.current_index]
 
     def import_character_assets(self):
@@ -36,14 +39,15 @@ class Player(pygame.sprite.Sprite):
             full_path = f'{character_path}/{animation}'  # complete path for a specific animation folder
             self.animations[animation] = import_folder(full_path)
 
-        print(self.animations)
+        #print(self.animations)
 
     def apply_transformation_scale(self, key='idle', size=64):
         for i, image in enumerate(self.animations[key]):
             self.animations[key][i] = pygame.transform.scale(image, (size,size)).convert_alpha()
 
     def animate(self):
-        animation = self.animations['run']
+        #print(f'player status: {self.status}')
+        animation = self.animations[self.status]
         # loop over frame index
 
         self.frame_index += self.animation_speed
@@ -52,9 +56,6 @@ class Player(pygame.sprite.Sprite):
             self.current_index = 0
 
         self.image = animation[int(self.frame_index)]
-
-
-
 
 
     def get_input(self):
@@ -74,6 +75,31 @@ class Player(pygame.sprite.Sprite):
 
         self.direction.x = 0  # player is not moving
 
+    def get_status(self):
+
+        player_diraction = self.direction
+        self.status = 'idle'
+
+        # jumping
+        if player_diraction.y < 0:
+            self.status = 'jump'
+            return
+
+        # falling
+        # if player_diraction.y > 0:
+        #     self.status = 'fall'
+        #     return
+
+        # running
+        if player_diraction.x:
+            self.status = 'run'
+            return
+
+        # at idle status
+        if not(player_diraction.x or player_diraction.y):
+            self.status = 'idle'
+
+
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
@@ -83,4 +109,5 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.get_input()
+        self.get_status()
         self.animate()
