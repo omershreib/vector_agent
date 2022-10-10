@@ -42,22 +42,23 @@ class Level:
 
         # scrolling to the left
         if player_x < 200 and direction_x < 0:
-            self.world_shift = 4
-            player.velocity = 0
+            self.world_shift = player.velocity
+            #player.velocity = 0
             return
 
         # scrolling to the right
         if player_x > 1000 and direction_x > 0:
-            self.world_shift = -4
-            player.velocity = 0
+            self.world_shift = -player.velocity
+            #player.velocity = 0
             return
 
         # default, no scrolling at all
         self.world_shift = 0
-        player.velocity = 4
+        #player.velocity = 4
 
     def hor_movemenet_collision(self):
         player = self.player.sprite
+        print(player.velocity)
         player.rect.x += player.direction.x * player.velocity
 
         for tile in self.tiles.sprites():
@@ -80,15 +81,28 @@ class Level:
             # checks if the player is collide with                                  # did we have a collision?
             # one of the tile's rectangle
             if tile.rect.colliderect(player.rect):                                  # if so, where (top or bottom)?
-                if player.direction.y > 0:  # player is moving to the bottom
+
+                # player is moving to the bottom
+                if player.direction.y > 0:
                     player.rect.bottom = tile.rect.top
                     player.direction.y = 0  # this line cancel gravity where the player is standing on top of a tile
+                    player.is_on_ground = True
                     return
 
-                if player.direction.y < 0:  # player is moving to the top
+                # player is moving to the top
+                if player.direction.y < 0:
                     player.rect.top = tile.rect.bottom
                     player.direction.y = 0
+                    player.is_on_celling = True
                     return
+
+        # False on_ground flag if player is either jumping or falling
+        if player.is_on_ground and (player.direction.y < 0 or player.direction.y > 1):
+            player.is_on_ground = False
+
+        # False on_celling flag if player is falling
+        if player.is_on_celling and (player.direction.y > 0):
+            player.is_on_celling = False
 
     def run(self):
         screen = self.display_surface
