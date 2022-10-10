@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.velocity = 4
         self.gravity = 0.8
-        self.jump_velocity = -16
+        self.jump_velocity = -4
 
         # player status
         self.status = 'idle'
@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         #[self.apply_transformation_scale(key) for key in self.animations.keys()] # resize images if needed
         self.frame_index = 0
         self.current_index = 0
-        self.animation_speed = 0.05
+        self.animation_speed = 0.15
         self.image = self.animations['idle'][self.current_index]
 
     def import_character_assets(self):
@@ -86,7 +86,7 @@ class Player(pygame.sprite.Sprite):
             return
 
         # falling
-        # if player_diraction.y > 0:
+        # if player_diraction.y > 1:
         #     self.status = 'fall'
         #     return
 
